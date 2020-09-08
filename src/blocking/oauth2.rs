@@ -5,7 +5,6 @@ use log::{debug, error, trace};
 use percent_encoding::{utf8_percent_encode, AsciiSet, CONTROLS};
 use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
-use serde_json;
 
 // Use built-in library
 use std::collections::{HashMap, HashSet};
@@ -321,7 +320,7 @@ impl SpotifyOAuth {
         payload.insert("grant_type", "authorization_code");
         payload.insert("scope", &self.scope);
         payload.insert("state", &self.state);
-        return self.fetch_access_token(&self.client_id, &self.client_secret, &payload);
+        self.fetch_access_token(&self.client_id, &self.client_secret, &payload)
     }
     /// Gets the access_token for the app with given the code
     pub fn get_access_token(&self, code: &str) -> Option<TokenInfo> {
@@ -391,7 +390,7 @@ impl SpotifyOAuth {
         let mut payload = HashMap::new();
         payload.insert("refresh_token", refresh_token);
         payload.insert("grant_type", "refresh_token");
-        return self.fetch_access_token(&self.client_id, &self.client_secret, &payload);
+        self.fetch_access_token(&self.client_id, &self.client_secret, &payload)
     }
 
     /// After refresh access_token, the response may be empty
