@@ -67,8 +67,11 @@ pub fn convert_str_to_map(query_str: &mut str) -> HashMap<&str, &str> {
         .filter(|token| !token.is_empty())
         .collect();
     for token in tokens {
-        let vec: Vec<&str> = token.split('=').collect();
-        map.insert(vec[0], vec[1]);
+        let mut tokens = token.split('=');
+        match (tokens.next(), tokens.next()) {
+            (Some(k), Some(v)) => map.insert(k, v),
+            _ => continue,
+        };
     }
     map
 }
