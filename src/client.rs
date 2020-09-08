@@ -731,10 +731,7 @@ impl Spotify {
         // params.insert("uris".to_owned(), uris.into());
         let params = json!({ "uris": uris });
         let url = format!("users/{}/playlists/{}/tracks", user_id, plid);
-        match self.put(&url, &params).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &params).await.map(|_| ())
     }
 
     /// [reorder playlists tracks](https://developer.spotify.com/web-api/reorder-playlists-tracks/)
@@ -880,10 +877,7 @@ impl Spotify {
             "users/{}/playlists/{}/followers",
             playlist_owner_id, playlist_id
         );
-        match self.put(&url, &Value::Object(map)).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &Value::Object(map)).await.map(|_| ())
     }
 
     /// [check user following playlist](https://developer.spotify.com/web-api/check-user-following-playlist/)
@@ -1020,10 +1014,7 @@ impl Spotify {
             .map(|id| self.get_id(Type::Track, id))
             .collect();
         let url = format!("me/tracks/?ids={}", uris.join(","));
-        match self.delete(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.delete(&url, &json!({})).await.map(|_| ())
     }
 
     /// [check users saved tracks](https://developer.spotify.com/web-api/check-users-saved-tracks/)
@@ -1059,10 +1050,7 @@ impl Spotify {
             .map(|id| self.get_id(Type::Track, id))
             .collect();
         let url = format!("me/tracks/?ids={}", uris.join(","));
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [get users  top artists and tracks](https://developer.spotify.com/web-api/get-users-top-artists-and-tracks/)
@@ -1151,10 +1139,7 @@ impl Spotify {
             .map(|id| self.get_id(Type::Album, id))
             .collect();
         let url = format!("me/albums/?ids={}", uris.join(","));
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [remove albums user](https://developer.spotify.com/documentation/web-api/reference/library/remove-albums-user/)
@@ -1171,10 +1156,7 @@ impl Spotify {
             .map(|id| self.get_id(Type::Album, id))
             .collect();
         let url = format!("me/albums/?ids={}", uris.join(","));
-        match self.delete(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.delete(&url, &json!({})).await.map(|_| ())
     }
 
     /// [check users saved albums](https://developer.spotify.com/documentation/web-api/reference/library/check-users-saved-albums/)
@@ -1202,10 +1184,7 @@ impl Spotify {
     /// - artist_ids - a list of artist IDs
     pub async fn user_follow_artists(&self, artist_ids: &[String]) -> Result<(), failure::Error> {
         let url = format!("me/following?type=artist&ids={}", artist_ids.join(","));
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [unfollow artists users](https://developer.spotify.com/documentation/web-api/reference/follow/unfollow-artists-users/)
@@ -1214,10 +1193,7 @@ impl Spotify {
     /// - artist_ids - a list of artist IDs
     pub async fn user_unfollow_artists(&self, artist_ids: &[String]) -> Result<(), failure::Error> {
         let url = format!("me/following?type=artist&ids={}", artist_ids.join(","));
-        match self.delete(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.delete(&url, &json!({})).await.map(|_| ())
     }
 
     /// [check user following
@@ -1244,10 +1220,7 @@ impl Spotify {
     /// - user_ids - a list of artist IDs
     pub async fn user_follow_users(&self, user_ids: &[String]) -> Result<(), failure::Error> {
         let url = format!("me/following?type=user&ids={}", user_ids.join(","));
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [unfollow artists users](https://developer.spotify.com/documentation/web-api/reference/follow/unfollow-artists-users/)
@@ -1256,10 +1229,7 @@ impl Spotify {
     /// - user_ids - a list of artist IDs
     pub async fn user_unfollow_users(&self, user_ids: &[String]) -> Result<(), failure::Error> {
         let url = format!("me/following?type=user&ids={}", user_ids.join(","));
-        match self.delete(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.delete(&url, &json!({})).await.map(|_| ())
     }
 
     /// [get list featured playlists](https://developer.spotify.com/web-api/get-list-featured-playlists/)
@@ -1591,10 +1561,7 @@ impl Spotify {
         payload.insert("device_ids".to_owned(), device_ids.into());
         payload.insert("play".to_owned(), force_play.into());
         let url = String::from("me/player");
-        match self.put(&url, &Value::Object(payload)).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &Value::Object(payload)).await.map(|_| ())
     }
 
     /// [start a users playback](https://developer.spotify.com/web-api/start-a-users-playback/)
@@ -1647,10 +1614,7 @@ impl Spotify {
             params.insert("position_ms".to_owned(), _position_ms.into());
         };
         let url = self.append_device_id("me/player/play", device_id);
-        match self.put(&url, &Value::Object(params)).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &Value::Object(params)).await.map(|_| ())
     }
 
     /// [pause a users playback](https://developer.spotify.com/web-api/pause-a-users-playback/)
@@ -1659,10 +1623,7 @@ impl Spotify {
     /// - device_id - device target for playback
     pub async fn pause_playback(&self, device_id: Option<String>) -> Result<(), failure::Error> {
         let url = self.append_device_id("me/player/pause", device_id);
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [skip users playback to the next track](https://developer.spotify.com/web-api/skip-users-playback-to-next-track/)
@@ -1671,10 +1632,7 @@ impl Spotify {
     /// - device_id - device target for playback
     pub async fn next_track(&self, device_id: Option<String>) -> Result<(), failure::Error> {
         let url = self.append_device_id("me/player/next", device_id);
-        match self.post(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.post(&url, &json!({})).await.map(|_| ())
     }
 
     /// [skip users playback to previous track](https://developer.spotify.com/web-api/skip-users-playback-to-previous-track/)
@@ -1683,10 +1641,7 @@ impl Spotify {
     /// - device_id - device target for playback
     pub async fn previous_track(&self, device_id: Option<String>) -> Result<(), failure::Error> {
         let url = self.append_device_id("me/player/previous", device_id);
-        match self.post(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.post(&url, &json!({})).await.map(|_| ())
     }
 
     /// [seek-to-position-in-currently-playing-track/](https://developer.spotify.com/web-api/seek-to-position-in-currently-playing-track/)
@@ -1703,10 +1658,7 @@ impl Spotify {
             &format!("me/player/seek?position_ms={}", position_ms),
             device_id,
         );
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [set repeat mode on users playback](https://developer.spotify.com/web-api/set-repeat-mode-on-users-playback/)
@@ -1723,10 +1675,7 @@ impl Spotify {
             &format!("me/player/repeat?state={}", state.as_str()),
             device_id,
         );
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [set-volume-for-users-playback](https://developer.spotify.com/web-api/set-volume-for-users-playback/)
@@ -1746,10 +1695,7 @@ impl Spotify {
             &format!("me/player/volume?volume_percent={}", volume_percent),
             device_id,
         );
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [toggle shuffle for user playback](https://developer.spotify.com/web-api/toggle-shuffle-for-users-playback/)
@@ -1763,10 +1709,7 @@ impl Spotify {
         device_id: Option<String>,
     ) -> Result<(), failure::Error> {
         let url = self.append_device_id(&format!("me/player/shuffle?state={}", state), device_id);
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// [Add an item to the end fo the user's current playback queue](https://developer.spotify.com/console/post-queue/)
@@ -1781,10 +1724,7 @@ impl Spotify {
         device_id: Option<String>,
     ) -> Result<(), failure::Error> {
         let url = self.append_device_id(&format!("me/player/queue?uri={}", &item), device_id);
-        match self.post(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.post(&url, &json!({})).await.map(|_| ())
     }
 
     /// [Save Shows for Current User](https://developer.spotify.com/console/put-current-user-saved-shows)
@@ -1794,10 +1734,7 @@ impl Spotify {
     pub async fn save_shows(&self, ids: Vec<String>) -> Result<(), failure::Error> {
         let joined_ids = ids.join(",");
         let url = format!("me/shows/?ids={}", joined_ids);
-        match self.put(&url, &json!({})).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.put(&url, &json!({})).await.map(|_| ())
     }
 
     /// Get a list of shows saved in the current Spotify user’s library. Optional parameters can be used to limit the number of shows returned.
@@ -1964,10 +1901,7 @@ impl Spotify {
                 serde_json::Value::String(_market.as_str().to_owned()),
             );
         }
-        match self.delete(&url, &Value::Object(payload)).await {
-            Ok(_) => Ok(()),
-            Err(e) => Err(e),
-        }
+        self.delete(&url, &Value::Object(payload)).await.map(|_| ())
     }
 
     pub fn convert_result<'a, T: Deserialize<'a>>(
