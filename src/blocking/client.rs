@@ -3,13 +3,13 @@
 use chrono::prelude::*;
 use failure::format_err;
 use log::{error, trace};
-use reqwest::blocking::Client;
-use reqwest::header::{HeaderMap, AUTHORIZATION, CONTENT_TYPE};
-use reqwest::Method;
-use reqwest::StatusCode;
+use reqwest::{
+    blocking::Client,
+    header::{HeaderMap, AUTHORIZATION, CONTENT_TYPE},
+    Method, StatusCode,
+};
 use serde::Deserialize;
-use serde_json::map::Map;
-use serde_json::{json, Value};
+use serde_json::{json, map::Map, Value};
 
 //  Built-in battery
 use std::borrow::Cow;
